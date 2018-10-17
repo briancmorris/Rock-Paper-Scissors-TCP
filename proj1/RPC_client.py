@@ -23,9 +23,11 @@ while True:
     if len(response) > 1:
         print(response, end='')
 
+    # Connected to server.
+    if response.lower().__contains__("connected"):
+        continue
     # Server asks us to wait.
-    if response.lower().__contains__("wait"):
-        print('')
+    elif response.lower().__contains__("wait"):
         continue
     # Server asks for input.
     elif response.lower().__contains__("enter"):
@@ -33,7 +35,6 @@ while True:
         clientSocket.send(option)
     # Server is busy.
     elif response.lower().__contains__("busy"):
-        print('')
         break
     # Game end.
     elif (

@@ -32,9 +32,14 @@ def game(player1socket, player2socket):
 
     # Prompt for valid input from both players.
     while not (player1valid and player2valid):
-        # Check player 1 input.
+        # Prompt player 1 for input.
         if not player1valid:
             player1socket.send("Enter R, P, or S: ")
+        if not player2valid:
+            player2socket.send("Enter R, P, or S: ")
+
+        # Check player 1 input.
+        if not player1valid:
             response = player1socket.recv(1024)
             # Check if valid.
             if len(response) == 1:
@@ -46,7 +51,6 @@ def game(player1socket, player2socket):
 
         # Check player 2 input.
         if not player2valid:
-            player2socket.send("Enter R, P, or S: ")
             response = player2socket.recv(1024)
             # Check if valid.
             if len(response) == 1:
@@ -61,7 +65,7 @@ def game(player1socket, player2socket):
 
     # Evaluate tie case.
     if player1input.__eq__(player2input):
-        result = result + "tie\nYou tied!\nDisconnecting from the game server. Thank you for playing!"
+        result = result + "tie\nYou tied!\nDisconnecting from the game server. Thank you for playing!\n"
         player1socket.send(result)
         player2socket.send(result)
         # Server message.
@@ -80,15 +84,15 @@ def game(player1socket, player2socket):
     # Player 2 wins.
     else:
         result = result + "2"
-        player1socket.send(result + "\nYou lost!\nDisconnecting from the game server. Thank you for playing!")
-        player2socket.send(result + "\nYou won!\nDisconnecting from the game server. Thank you for playing!")
+        player1socket.send(result + "\nYou lost!\nDisconnecting from the game server. Thank you for playing!\n")
+        player2socket.send(result + "\nYou won!\nDisconnecting from the game server. Thank you for playing!\n")
         # Server message.
         print ">>Player 2 won!"
 
     # Remove 2 players from the count.
     numPlayers -= 2
     # Server message.
-    print "Game over."
+    print ">>Game over."
     # Exit game.
     return
 
@@ -116,7 +120,7 @@ while True:
     # Update numPlayers
     numPlayers += 1
     # Send welcome message.
-    playerSocket.send("Connected to the Rock, Paper, Scissors Game Server.")
+    playerSocket.send("Connected to the Rock, Paper, Scissors Game Server.\n")
 
     # Indicate new player to server.
     print "\nA new player is trying to connect to the game server on " + str(playerAddress[0]) + ":" + str(playerAddress[1])
@@ -127,21 +131,21 @@ while True:
         print "Current number of available players is 1\nOne player waiting for another player to join."
 
         # Player message.
-        playerSocket.send("You are player 1.\nWaiting for a second player to join.\n")
+        playerSocket.send("You are player 1.\nWaiting for a second player to join.\n\n")
     # Second player connected.
     elif numPlayers == 2:
         # Server message.
         print "Current number of available players is 2\nTwo players available, let's play!"
 
         # Player message.
-        playerSocket.send("You are player 2.\nLet's play!\n")
+        playerSocket.send("You are player 2.\nLet's play!\n\n")
 
         # Start up the game thread.
         thread.start_new_thread(game, (playerSockets.pop(0), playerSockets.pop(0),))
 
     # Full game.
     elif numPlayers > 2:
-        print "Two players already playing. Can't start a new game."
+        print "Two players already playing. Can't start a new game.\n"
         # Kick out excess players.
         for socket in playerSockets:
             socket.send("Server is busy with a game. Try to connect later.")
