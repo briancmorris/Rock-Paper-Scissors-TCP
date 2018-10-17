@@ -21,50 +21,23 @@ def game(player1socket, player2socket):
     # Utilize global variable numPlayers.
     global numPlayers
 
-    # Has player 1 provided valid input?
-    player1valid = False
-    # Player 1's valid input.
-    player1input = ""
-    # Has player 2 provided valid input?
-    player2valid = False
-    # Player 2's valid input.
-    player2input = ""
-
     # Prompt for valid input from both players.
-    while not (player1valid and player2valid):
-        # Prompt player 1 for input.
-        if not player1valid:
-            player1socket.send("Enter R, P, or S: ")
-        if not player2valid:
-            player2socket.send("Enter R, P, or S: ")
+    player1socket.send("Enter R, P, or S: ")
+    player2socket.send("Enter R, P, or S: ")
 
-        # Check player 1 input.
-        if not player1valid:
-            response = player1socket.recv(1024)
-            # Check if valid.
-            if len(response) == 1:
-                if response.__contains__("R") or response.__contains__("P") or response.__contains__("S"):
-                    player1valid = True
-                    player1input = player1input + response
-                    # Server message.
-                    print ">>Player 1 played: " + response
+    # Receive and print the response from player 1.
+    response1 = player1socket.recv(1024)
+    print ">>Player 1 played: " + response1
 
-        # Check player 2 input.
-        if not player2valid:
-            response = player2socket.recv(1024)
-            # Check if valid.
-            if len(response) == 1:
-                if response.__contains__("R") or response.__contains__("P") or response.__contains__("S"):
-                    player2valid = True
-                    player2input = player2input + response
-                    # Server message.
-                    print ">>Player 2 played: " + response
+    # Receive and print the response from player 2.
+    response2 = player2socket.recv(1024)
+    print ">>Player 2 played: " + response2
 
     # Result string.
     result = "result of the game is "
 
     # Evaluate tie case.
-    if player1input.__eq__(player2input):
+    if response1.__eq__(response2):
         result = result + "tie\nYou tied!\nDisconnecting from the game server. Thank you for playing!\n"
         player1socket.send(result)
         player2socket.send(result)
@@ -72,9 +45,9 @@ def game(player1socket, player2socket):
         print ">>Players tied!"
     # Evaluate if player 1 wins.
     elif (
-            (player1input.__contains__("R") and player2input.__contains__("S")) or
-            (player1input.__contains__("S") and player2input.__contains__("P")) or
-            (player1input.__contains__("P") and player2input.__contains__("R"))
+            (response1.__contains__("R") and response2.__contains__("S")) or
+            (response1.__contains__("S") and response2.__contains__("P")) or
+            (response1.__contains__("P") and response2.__contains__("R"))
     ):
         result = result + "1"
         player1socket.send(result + "\nYou won!\nDisconnecting from the game server. Thank you for playing!")
@@ -148,6 +121,6 @@ while True:
         print "Two players already playing. Can't start a new game.\n"
         # Kick out excess players.
         for socket in playerSockets:
-            socket.send("Server is busy with a game. Try to connect later.")
+            socket.send("Server is busy with a game. Try to connect later.\n")
             playerSockets.remove(socket)
             numPlayers -= 1
