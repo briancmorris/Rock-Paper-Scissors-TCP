@@ -1,1 +1,1 @@
-# csc401
+# Rock-Paper-Scissors in TCP
