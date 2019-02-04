@@ -1,5 +1,5 @@
 # @Author: Brian Morris
-# CSC 401 Project 1
+# Rock-Paper-Scissors Server
 import socket
 import sys
 import thread
