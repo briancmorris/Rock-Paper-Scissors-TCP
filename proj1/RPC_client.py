@@ -1,5 +1,5 @@
 # @Author: Brian Morris
-# CSC 401 Project 1
+# Rock-Paper-Scissors Client
 from __future__ import print_function
 import socket
 import sys
